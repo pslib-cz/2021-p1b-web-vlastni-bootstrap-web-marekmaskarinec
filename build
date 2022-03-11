@@ -1,0 +1,10 @@
+#!/bin/sh
+# Use this to generate the website. Paths are hardcoded to my pc.
+
+cd site
+
+for f in $(find -name \*.html | cut -d / -f 2-); do
+	echo BU $f
+	umka ../conv.um ../template.html $f > ../$(echo $f | cut -d . -f 1).html
+done
+

@@ -1,0 +1,302 @@
+// Auto docs from comments for umka
+// The "parsing" is horrible. TODO
+
+import (
+	"strings.um"
+	"std.um"
+)
+
+const (
+	term = 0
+	markdown	
+	txt
+)
+
+var (
+	ignore_unexported: bool
+	do_header: bool
+	url: str = ""
+	out_dir: str = ""
+	out_type: int
+	txt_header: str
+)
+
+type Element = interface {
+	to_markdown(): str
+	to_term(): str
+	to_txt(): str
+}
+
+type Function = struct {
+	prototype: str
+	docs: str
+	name: str
+}
+
+type Type = struct {
+	is_interface: bool
+	name: str
+	docs: str
+	body: str
+}
+
+fn (f: ^Function) to_markdown(): str {
+	return "## fn " + f.name + "\n" + "`" + f.prototype + "`\n\n" + f.docs + "\n"
+}
+
+fn (f: ^Function) to_term(): str {
+	return "\x1b[1mfn " + f.name + "\x1b[0m\n\x1b[3m" + f.prototype + "\x1b[0m\n\n" + f.docs + "\n"
+}
+
+fn (f: ^Function) to_txt(): str {
+	return "\n" + f.prototype + "\n\n" + f.docs + "\n" + txt_header + "\n"
+}
+
+fn (t: ^Type) to_term(): str {
+	out := strings.mk_builder()
+	out.write_str("\x1b[1m")
+
+	if t.is_interface {
+		out.write_str("interface ")
+	} else {
+		out.write_str("struct ")
+	}
+
+	out.write_str(t.name + "\x1b[0m\n\x1b[3m" + t.body + "\n\n\x1b[0m" + t.docs + "\n")
+
+	return out.to_str()
+}
+
+fn (t: ^Type) to_txt(): str {
+	return "\n" + t.body + "\n\n" + t.docs + "\n" + txt_header + "\n"
+}
+
+fn (t: ^Type) to_markdown(): str {
+	out := strings.mk_builder()
+	out.write_str("## ")
+
+	if t.is_interface {
+		out.write_str("interface ")
+	} else {
+		out.write_str("struct ")
+	}
+	
+	out.write_str(t.name + "\n```go\n" + t.body + "```\n\n" + t.docs + "\n")
+
+	return out.to_str()
+}
+
+fn readall(f: std.File): str {
+    const blockSize = 16
+    res := ""
+
+    for ok := true; ok {
+	    var buff: [blockSize + 1]char
+	    ok = std.fread(f, ^[blockSize]char(&buff)) == 1
+	    res += str([]char(buff))
+    }
+
+    return res
+}
+
+fn get_docs(inp: []str, start: int): str {
+	doc_end := start
+	for j:=start-1;
+		j >= 0 &&
+		len(inp[j]) > 2 &&
+		inp[j][0] == '/' && inp[j][0] == '/';
+		j-- {
+		doc_end = j
+	}
+
+	docs := ""
+	for s in slice(inp, doc_end, start) {
+		docs += strings.trimspaces(strings.trimprefix(s, "//")) + "\n"
+	}
+
+	return docs
+}
+
+fn get_elements(inp: str): []Element {
+	split := strings.split(inp, "\n")
+
+	out := []Element{}
+
+	for i, s in split {
+		toks := strings.split(strings.trimspaces(split[i]), " ")
+		
+		if len(toks) == 0 {
+			continue
+		}
+
+		if toks[0] == "fn" {
+			docs := get_docs(split, i)
+
+			prototype := strings.split(split[i], "{")[0]
+			prototype = strings.trimspaces(prototype)
+
+			if ignore_unexported && !strings.contains(prototype, "*") {
+				continue
+			}
+
+			name_pos := 1
+			if toks[1][0] == '(' {
+				name_pos = 3
+			}
+
+			name := strings.split(toks[name_pos], "(")[0]
+
+			out = append(out, Function{prototype, docs, name})
+		}
+
+		if toks[0] == "type" && len(toks) >= 4 && toks[1] != "(" {
+			docs := get_docs(split, i)
+
+			is_interface := false
+			if toks[3] == "interface" {
+				is_interface = true
+			}
+
+			name := toks[1]
+
+			if ignore_unexported && !strings.contains(name, "*") {
+				continue
+			}
+
+			body := ""
+			if strings.contains(split[i], "}") || !strings.contains(split[i], "{") {
+				body = split[i]
+			} else {
+				for j:=i; j < len(split) && split[j-1] != '}'; j++ {
+					body += split[j] + "\n"
+				}
+			}
+
+			out = append(out, Type{is_interface, name, docs, body})
+		}
+	}
+
+	return out
+}
+
+fn get_header(inp: str): str {
+	split := strings.split(inp, "\n")
+	out := strings.mk_builder()
+
+	for i:=0;
+		i < len(split) &&
+		len(split[i]) > 2 &&
+		split[i][0] == '/' && split[i][1] == '/';
+		i++ {
+		out.write_str(strings.trimprefix(split[i], "//") + "\n")
+	}
+
+	return strings.replace(out.to_str(), "/", "")
+}
+
+fn help() {
+	printf("automatic documentation for umka\n")
+	printf("by Marek Maskarinec\n")
+	printf("How to use:\n")
+	printf("  Leave comments above functions and type definitions.\n")
+	printf("  Then pass files to this command to be documented.\n")
+	printf("Flags:\n")
+	printf("  -i: ignore unexported\n")
+	printf("  -o: define output directory\n")
+	printf("  -r: include header from a file\n")
+	printf("  -m: export to markdown (terminal view by default)\n")
+	printf("  -t: export to plain text")
+	printf("  -h: show this help\n")
+}
+
+fn main() {
+	if std.argc() == 1 {
+		help()
+	}
+
+	files := []str{}
+	for i:=1; i < std.argc(); i++ {
+		if std.argv(i)[0] == '-' {
+			if len(std.argv(i)) == 1 {
+				continue
+			}
+
+			switch std.argv(i)[1] {
+			case 'i':
+				ignore_unexported = true
+			case 'u':
+				url = std.argv(i+1)
+				i++
+			case 'o':
+				out_dir = std.argv(i+1) + "/"
+				i++
+			case 'r':
+				do_header = true
+			case 'm':
+				out_type = markdown
+			case 't':
+				out_type = txt
+			case 'h':
+				help()
+			default:
+				help()
+			}
+		} else {
+			files = append(files, std.argv(i))
+		}
+	}
+
+	txt_header = strings.repeat("_", 80)
+
+	for p in files {
+		f := std.fopen(p, "r")
+
+		inp := readall(f)
+		els := get_elements(inp)
+		std.fclose(f)
+
+		path_parts := strings.split(p, "/")
+		fname := path_parts[len(path_parts)-1]
+		switch out_type {
+		case markdown:
+			out := strings.mk_builder()
+			out.write_str("# " + fname + "\n\n")
+      
+			if do_header {
+				out.write_str("```\n" + get_header(inp) + "```\n\n")
+			}
+      
+			for e in els {
+				out.write_str(e.to_markdown() + "\n")
+			}
+      
+			f = std.fopen(out_dir + fname + ".md", "w")
+			std.fprintln(f, out.to_str())
+			std.fclose(f)
+		case txt:
+			out := strings.mk_builder()
+			out.write_str(fname + "\n" + txt_header + "\n\n")
+      
+			if do_header {
+				out.write_str(get_header(inp) + txt_header + "\n\n")
+			}
+      
+			for e in els {
+				out.write_str(e.to_txt() + "\n")
+			}
+      
+			f = std.fopen(out_dir + "/" + fname + ".txt", "w")
+			if f == null {
+				printf("could not open %s", out_dir + "/" + p + ".txt")
+				continue
+			}
+			std.fprintln(f, out.to_str())
+			std.fclose(f)
+
+		case term:
+			for e in els {
+				printf("%s\n", e.to_term())
+			}
+		}
+	}
+}
