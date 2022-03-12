@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf8 />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<title>image</title>
+<style>
+img.no-anti-aliasing { 
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+
+.carousel-label {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+</style>
+	</head>
+	<body>
+		<header class="p-3 sticky-top bg-dark text-white">
+			<div class="container">
+				<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+					<a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none" href="/">
+						<img class="bi me-2 no-anti-aliasing" src="/img/logo-white.png" width="40" />
+					</a>
+					<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md 0">
+						<li>
+							<a class="nav-link px-2 text-white" href="/">tophat</a>
+						</li>
+						<li>
+							<a class="nav-link px-2 text-white" href="/downloads/">Downloads</a>
+						</li>
+						<li>
+							<a class="nav-link px-2 text-white" href="/docs/">Docs</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<div class="container py-5">
+			<h2>image.um</h2><hr>
+<p></p><h3>type Image*</h3><hr>
+<pre>
+type Image* = struct {
+	handle: int
+}
+
+</pre><p>
+Represents a drawable image. It is an opaque structure.
+Images support a color filter. It is applied by multiplying the color
+of each pixel with the filter.
+</p>
+
+<h3>fn load*</h3><hr>
+<pre>fn load*(path: str): Image</pre>
+<p>Loads an image at path.
+</p>
+
+<h3>fn flipv*</h3><hr>
+<pre>fn (i: ^Image) flipv*(flip: bool)</pre>
+<p>Flips image on it's vertical axis.
+</p>
+
+<h3>fn fliph*</h3><hr>
+<pre>fn (i: ^Image) fliph*(flip: bool)</pre>
+<p>Flips image on it's horizontal axis.
+</p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (i: ^Image) draw*(t: th.Transform, color: uint32 = th.white)</pre>
+<p>Draws the image in screen coordinates. It transforms it with t and
+applies color as a color filter.
+</p>
+
+<h3>fn validate*</h3><hr>
+<pre>fn (i: ^Image) validate*(): bool</pre>
+<p>Returns true, if i's handle points to an image.
+</p>
+
+<h3>fn getDims*</h3><hr>
+<pre>fn (i: ^Image) getDims*(): th.Vf2</pre>
+<p>Returns width and heigth.
+</p>
+
+<h3>fn crop*</h3><hr>
+<pre>fn (i: ^Image) crop*(tl, br: th.Vf2)</pre>
+<p>Crops an image. Coordinates are between 0, 0 (top left) and
+1, 1 (bottom right)
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(data: []uint32, dm: th.Vf2): Image</pre>
+<p>Creates an image from raw data.
+</p>
+
+<h3>fn copy*</h3><hr>
+<pre>fn (i: ^Image) copy*(): Image</pre>
+<p>Copies image into a new one.
+</p>
+
+
+
+		</div>
+		<footer class="footer mt-auto bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+			<p class="col-md-4 mb-0 text-muted">
+				Public domain, <a href="http://harmful.cat-v.org/economics/intellectual_property/">Intelectual property is oxymoron</a>
+			</p>
+    
+			<a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none container">
+				<img class="bi me-2 no-anti-aliasing" src="/img/logo.png" width="40" />
+			</a>
+    
+			<ul class="nav col-md-4 justify-content-end">
+				<li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+				<li class="nav-item"><a href="/downloads" class="nav-link px-2 text-muted">Downloads</a></li>
+				<li class="nav-item"><a href="/docs" class="nav-link px-2 text-muted">Docs</a></li>
+			</ul>
+		</footer>
+	</body>
+</html>
+

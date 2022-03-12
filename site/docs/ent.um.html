@@ -1,0 +1,61 @@
+<h2>ent.um</h2><hr>
+<p></p><h3>type Ent*</h3><hr>
+<pre>
+type Ent* = struct {
+	// used as a collider, used as backup when invalid image is supplied
+	r: rect.Rect
+	// used in drawing
+	i: image.Image
+	// used to transform and translate the image and rect
+	t: th.Transform
+	// used as a color of the rect and a color filter for the image
+	c: uint32
+}
+
+</pre><p>
+Entity is the main game object. It features drawing and collisions.
+Every entity has an image used for drawing and a rectangle used
+for collisions. It also has a transform used for transforming it's image
+and rectangle.
+</p>
+
+<h3>type Coll*</h3><hr>
+<pre>
+type Coll* = struct {
+	index: th.uu
+	pos: th.Vf2
+}
+
+</pre><p>
+Value returned by get coll. It contains a position where the collision
+happened and the index of the entity involved in said collision.
+</p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (e: ^Ent) draw*(c: rect.Rect)</pre>
+<p>Draws the entity onto the screen in relaction to camera c.
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(img: image.Image, t: th.Transform): Ent</pre>
+<p>ent's constructor
+</p>
+
+<h3>fn getColl*</h3><hr>
+<pre>fn (e: ^Ent) getColl*(s: []^Ent, maxColls: th.uu): []Coll</pre>
+<p>Checks collisions of e with entities in s. Checks at max maxColl collisions.
+If s contains e, the collision won't be returned.
+</p>
+
+<h3>fn animate*</h3><hr>
+<pre>fn (e: ^Ent) animate*(fps: int, frames: ^[]image.Image, t: int)</pre>
+<p>Animates the entity's image with one of the `anim` array. <b>Won't</b> begin on
+the first frame. If you want that, use anim.Anim.
+</p>
+
+<h3>fn ysort*</h3><hr>
+<pre>fn ysort*(ents: ^[]ent.Ent)</pre>
+<p>Performs an y sort on entities.
+</p>
+
+

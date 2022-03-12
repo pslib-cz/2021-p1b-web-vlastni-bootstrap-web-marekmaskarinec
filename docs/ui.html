@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf8 />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<title>ui</title>
+<style>
+img.no-anti-aliasing { 
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+
+.carousel-label {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+</style>
+	</head>
+	<body>
+		<header class="p-3 sticky-top bg-dark text-white">
+			<div class="container">
+				<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+					<a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none" href="/">
+						<img class="bi me-2 no-anti-aliasing" src="/img/logo-white.png" width="40" />
+					</a>
+					<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md 0">
+						<li>
+							<a class="nav-link px-2 text-white" href="/">tophat</a>
+						</li>
+						<li>
+							<a class="nav-link px-2 text-white" href="/downloads/">Downloads</a>
+						</li>
+						<li>
+							<a class="nav-link px-2 text-white" href="/docs/">Docs</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<div class="container py-5">
+			<h2>ui.um</h2><hr>
+<p></p><h3>type Generic*</h3><hr>
+<pre>
+type Generic* = struct {
+	t: th.Transform
+	gridPos: th.Vf2
+	gridSpan: th.Vf2
+
+	ctx: interface{}
+	onEvent: fn(eventType: th.uu, ctx: interface{})
+	pressed: bool
+}
+
+</pre><p>
+A structure all elements have to contain. t can be set manually by the user,
+s being the dimensions, or it can be set by another elements. onEvent is an
+event callback. It will pass whatever is set in the ctx field.
+Event types:
+eventUnknown
+eventHover
+eventPress
+eventJustPress
+eventRelease
+</p>
+
+<h3>type Element*</h3><hr>
+<pre>
+type Element* = interface {
+	handle()
+	draw()
+	get(): ^Generic
+}
+
+</pre><p>
+An interface every ui element has to implements.
+</p>
+
+<h3>type TextRenderer*</h3><hr>
+<pre>
+type TextRenderer* = interface {
+	draw(text: str, pos: th.Vf2, color: uint32, scale: th.fu)
+	runeDims(rune: utf8.Rune): th.Vf2
+}
+
+</pre><p>
+Interface used anywhere, where text is rendered.
+</p>
+
+<h3>type PixelFont*</h3><hr>
+<pre>
+type PixelFont* = struct { }
+</pre><p>
+Bindings around canvas's font rendering functions to make them usable
+with the TextRenderer interface.
+</p>
+
+<h3>type Grid*</h3><hr>
+<pre>
+type Grid* = struct {
+	g: Generic
+	w, h: th.uu
+	border: th.fu
+	elements: []Element
+}
+
+</pre><p>
+A Grid container. The grid size is fixed, not dynamic like in Tk.
+</p>
+
+<h3>type Image*</h3><hr>
+<pre>
+type Image* = struct {
+	g: Generic
+	image: image.Image
+	stretch: bool
+}
+
+</pre><p>
+An element containing an image
+</p>
+
+<h3>type Label*</h3><hr>
+<pre>
+type Label* = struct {
+	g: Generic
+	text: str
+	renderer: TextRenderer
+	center: bool
+	wrapping: bool
+	color: uint32
+	bgColor: uint32
+	scale: th.fu
+}
+
+</pre><p>
+An element containing a TextRenderer. The text renderer supports
+word-wrapping and centered text.
+</p>
+
+<h3>fn grid*</h3><hr>
+<pre>fn (g: ^Generic) grid*(x, y: th.uu): ^Generic</pre>
+<p>Functions that sets the grid pos of a Generic
+</p>
+
+<h3>fn span*</h3><hr>
+<pre>fn (g: ^Generic) span*(x, y: th.uu): ^Generic</pre>
+<p>Function setting the grid span of a Generic
+</p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (g: ^Generic) handle*()</pre>
+<p>Generic's handle function. It checks for events. If you create your own
+ui element and want to have more control over how events are fired, you
+don't have to use it.
+</p>
+
+<h3>fn mkGrid*</h3><hr>
+<pre>fn mkGrid*(w, h: th.uu): Grid</pre>
+<p>Grid's constructor
+</p>
+
+<h3>fn get*</h3><hr>
+<pre>fn (g: ^Grid) get*(): ^Generic</pre>
+<p></p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (g: ^Grid) handle*()</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (g: ^Grid) draw*()</pre>
+<p></p>
+
+<h3>fn mkImage*</h3><hr>
+<pre>fn mkImage*(i: image.Image): Image</pre>
+<p></p>
+
+<h3>fn get*</h3><hr>
+<pre>fn (i: ^Image) get*(): ^Generic</pre>
+<p></p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (i: ^Image) handle*()</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (i: ^Image) draw*()</pre>
+<p></p>
+
+<h3>fn mkLabel*</h3><hr>
+<pre>fn mkLabel*(f: TextRenderer, text: str, color: uint32, scale: th.fu): Label</pre>
+<p></p>
+
+<h3>fn get*</h3><hr>
+<pre>fn (l: ^Label) get*(): ^Generic</pre>
+<p></p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (l: ^Label) handle*()</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (l: ^Label) draw*()</pre>
+<p></p>
+
+
+
+		</div>
+		<footer class="footer mt-auto bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+			<p class="col-md-4 mb-0 text-muted">
+				Public domain, <a href="http://harmful.cat-v.org/economics/intellectual_property/">Intelectual property is oxymoron</a>
+			</p>
+    
+			<a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none container">
+				<img class="bi me-2 no-anti-aliasing" src="/img/logo.png" width="40" />
+			</a>
+    
+			<ul class="nav col-md-4 justify-content-end">
+				<li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+				<li class="nav-item"><a href="/downloads" class="nav-link px-2 text-muted">Downloads</a></li>
+				<li class="nav-item"><a href="/docs" class="nav-link px-2 text-muted">Docs</a></li>
+			</ul>
+		</footer>
+	</body>
+</html>
+

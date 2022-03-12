@@ -1,0 +1,49 @@
+<h2>light.um</h2><hr>
+<p> <b>TO BE DELETED<b>
+</p><h3>type Mask*</h3><hr>
+<pre>
+type Mask* = struct {
+	dots: []uint32
+	w, h: th.uu
+	rectSize: th.fu
+	color: uint32
+}
+
+</pre><p>
+Mask is a set of dots that can be edited and drawn to emulate light.
+You can even edit the dots yourself, but it won't look good with multiple
+lights. A function for plotting a pixel will be available soon.
+</p>
+
+<h3>type Spotlight*</h3><hr>
+<pre>
+type Spotlight* = struct {
+	pos: th.Vf2
+	radius: th.uu
+	tint: uint32
+}
+
+</pre><p>
+A circular light that can be plotted onto a mask.
+</p>
+
+<h3>fn clear*</h3><hr>
+<pre>fn (m: ^Mask) clear*()</pre>
+<p>Clears the lightmask to have it's own default color.
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(color: uint32, rectSize: real, cam: rect.Rect): Mask</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (m: ^Mask) draw*(cam: rect.Rect)</pre>
+<p>Draws a lightmask.
+</p>
+
+<h3>fn stamp*</h3><hr>
+<pre>fn (s: ^Spotlight) stamp*(m: ^Mask, cam: rect.Rect)</pre>
+<p>Stamps a spotlight onto a mask.
+</p>
+
+

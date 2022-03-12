@@ -1,0 +1,39 @@
+<h2>input.um</h2><hr>
+<p> Module for getting keyboard and mouse input.
+ Keycodes are ascii chars (lower case) and the constants below.
+   mouse1
+   mouse2
+   mouse3
+   key_shift
+   key_backspace
+   key_delete
+   key_left
+   key_right
+   key_up
+   key_down
+   key_escape
+   key_enter
+</p><h3>fn getMousePos*</h3><hr>
+<pre>fn getMousePos*(): th.Vf2</pre>
+<p>Returns the position of mouse cursor in relation to the screen.
+</p>
+
+<h3>fn getGlobalMousePos*</h3><hr>
+<pre>fn getGlobalMousePos*(cam: rect.Rect): th.Vf2</pre>
+<p>Returns the position of mouse cursor in relation to cam.
+</p>
+
+<h3>fn isPressed*</h3><hr>
+<pre>fn isPressed*(code: char): bool</pre>
+<p>Returns true if key is pressed. Either use
+codes defined in the file above, or
+pass lower case char/number.
+</p>
+
+<h3>fn isJustPressed*</h3><hr>
+<pre>fn isJustPressed*(code: char): bool</pre>
+<p>Returns, whether code was just pressed
+this loop.
+</p>
+
+

@@ -1,0 +1,166 @@
+<h2>ui.um</h2><hr>
+<p></p><h3>type Generic*</h3><hr>
+<pre>
+type Generic* = struct {
+	t: th.Transform
+	gridPos: th.Vf2
+	gridSpan: th.Vf2
+
+	ctx: interface{}
+	onEvent: fn(eventType: th.uu, ctx: interface{})
+	pressed: bool
+}
+
+</pre><p>
+A structure all elements have to contain. t can be set manually by the user,
+s being the dimensions, or it can be set by another elements. onEvent is an
+event callback. It will pass whatever is set in the ctx field.
+Event types:
+eventUnknown
+eventHover
+eventPress
+eventJustPress
+eventRelease
+</p>
+
+<h3>type Element*</h3><hr>
+<pre>
+type Element* = interface {
+	handle()
+	draw()
+	get(): ^Generic
+}
+
+</pre><p>
+An interface every ui element has to implements.
+</p>
+
+<h3>type TextRenderer*</h3><hr>
+<pre>
+type TextRenderer* = interface {
+	draw(text: str, pos: th.Vf2, color: uint32, scale: th.fu)
+	runeDims(rune: utf8.Rune): th.Vf2
+}
+
+</pre><p>
+Interface used anywhere, where text is rendered.
+</p>
+
+<h3>type PixelFont*</h3><hr>
+<pre>
+type PixelFont* = struct { }
+</pre><p>
+Bindings around canvas's font rendering functions to make them usable
+with the TextRenderer interface.
+</p>
+
+<h3>type Grid*</h3><hr>
+<pre>
+type Grid* = struct {
+	g: Generic
+	w, h: th.uu
+	border: th.fu
+	elements: []Element
+}
+
+</pre><p>
+A Grid container. The grid size is fixed, not dynamic like in Tk.
+</p>
+
+<h3>type Image*</h3><hr>
+<pre>
+type Image* = struct {
+	g: Generic
+	image: image.Image
+	stretch: bool
+}
+
+</pre><p>
+An element containing an image
+</p>
+
+<h3>type Label*</h3><hr>
+<pre>
+type Label* = struct {
+	g: Generic
+	text: str
+	renderer: TextRenderer
+	center: bool
+	wrapping: bool
+	color: uint32
+	bgColor: uint32
+	scale: th.fu
+}
+
+</pre><p>
+An element containing a TextRenderer. The text renderer supports
+word-wrapping and centered text.
+</p>
+
+<h3>fn grid*</h3><hr>
+<pre>fn (g: ^Generic) grid*(x, y: th.uu): ^Generic</pre>
+<p>Functions that sets the grid pos of a Generic
+</p>
+
+<h3>fn span*</h3><hr>
+<pre>fn (g: ^Generic) span*(x, y: th.uu): ^Generic</pre>
+<p>Function setting the grid span of a Generic
+</p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (g: ^Generic) handle*()</pre>
+<p>Generic's handle function. It checks for events. If you create your own
+ui element and want to have more control over how events are fired, you
+don't have to use it.
+</p>
+
+<h3>fn mkGrid*</h3><hr>
+<pre>fn mkGrid*(w, h: th.uu): Grid</pre>
+<p>Grid's constructor
+</p>
+
+<h3>fn get*</h3><hr>
+<pre>fn (g: ^Grid) get*(): ^Generic</pre>
+<p></p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (g: ^Grid) handle*()</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (g: ^Grid) draw*()</pre>
+<p></p>
+
+<h3>fn mkImage*</h3><hr>
+<pre>fn mkImage*(i: image.Image): Image</pre>
+<p></p>
+
+<h3>fn get*</h3><hr>
+<pre>fn (i: ^Image) get*(): ^Generic</pre>
+<p></p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (i: ^Image) handle*()</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (i: ^Image) draw*()</pre>
+<p></p>
+
+<h3>fn mkLabel*</h3><hr>
+<pre>fn mkLabel*(f: TextRenderer, text: str, color: uint32, scale: th.fu): Label</pre>
+<p></p>
+
+<h3>fn get*</h3><hr>
+<pre>fn (l: ^Label) get*(): ^Generic</pre>
+<p></p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (l: ^Label) handle*()</pre>
+<p></p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (l: ^Label) draw*()</pre>
+<p></p>
+
+

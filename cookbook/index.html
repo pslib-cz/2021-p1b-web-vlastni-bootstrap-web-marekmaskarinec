@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset=utf8 />
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+		<title>index</title>
+<style>
+img.no-anti-aliasing { 
+    image-rendering: optimizeSpeed;             /* STOP SMOOTHING, GIVE ME SPEED  */
+    image-rendering: -moz-crisp-edges;          /* Firefox                        */
+    image-rendering: -o-crisp-edges;            /* Opera                          */
+    image-rendering: -webkit-optimize-contrast; /* Chrome (and eventually Safari) */
+    image-rendering: pixelated; /* Chrome */
+    image-rendering: optimize-contrast;         /* CSS3 Proposed                  */
+    -ms-interpolation-mode: nearest-neighbor;   /* IE8+                           */
+}
+
+.carousel-label {
+	background-color: rgba(0, 0, 0, 0.6);
+}
+</style>
+	</head>
+	<body>
+		<header class="p-3 sticky-top bg-dark text-white">
+			<div class="container">
+				<div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+					<a class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none" href="/">
+						<img class="bi me-2 no-anti-aliasing" src="/img/logo-white.png" width="40" />
+					</a>
+					<ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md 0">
+						<li>
+							<a class="nav-link px-2 text-white" href="/">tophat</a>
+						</li>
+						<li>
+							<a class="nav-link px-2 text-white" href="/downloads/">Downloads</a>
+						</li>
+						<li>
+							<a class="nav-link px-2 text-white" href="/docs/">Docs</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</header>
+		<div class="container py-5">
+			<h1 class="pb-2 border-bottom">tophat cookbook</h1>
+
+<p>
+Welcome to the tophat cookbook. You can find all sorts of recipes for doing
+common stuff in tophat.
+</p>
+
+<h2 class="pb-2 border-bottom">contents</h2>
+
+<ol>
+	<li><a href="#concepts">basic tophat concepts</a></li>
+	<li><a href="#images">loading and drawing images</a></li>
+	<li><a href="#input">getting keyboard and mouse input </a></li>
+	<li><a href="#text">drawing text</a></li>
+	<li><a href="#sound">playing sounds</a></li>
+	<li><a href="#entities">entities</a></li>
+	<li><a href="#distribution">distributing your game</a></li>
+</ol>
+
+<h2 class="pb-2 border-bottom" id="concepts">1. basic tophat concepts</h2>
+
+<p>
+	To fully understand examples in the cookbook, it is important to know the basic
+	concepts used in tophat.
+	
+	Tophat doesn't have any kind of scenes. Everything is structured and managed by
+	the player. User has to explicitly call functions into tophat to get results or
+	draw stuff. Tophat doesn't do nearly anything automatically - the user is in
+	front of the steering wheel.
+	
+	In communication with tophat, there are some types used, which are good to know.
+	They are defined in the <a href="//docs/th.html">th.um</a> module. First of them is th.Vf2. It is a 2d
+	vector. It contains x and y - both of the type th.fu. th.fu is the type tophat
+	uses to represent decimal numbers. There are also th.iu and th.uu. There is
+	also th.Transform defined in the file. It describes a transformation using
+	position, scale, rotation and rotation origin. Rotations in tophat are in degrees.
+</p>
+
+<h2 class="pb-2 border-bottom" id="images">2. loading and drawing an image</h2>
+
+<p>
+	First you need to import the <a href="/docs/image.html">image.um</a> module, which houses all sorts
+	of image functions. We are interested in image.load. It takes a path to an image,
+	which it loads and then returns. Example:
+</p>
+
+<pre>
+	apple := image.load("gfx/apple.png")
+</pre>
+
+<p>
+	That's all. The image is now ready to be drawn. That can be done by using it's
+	draw method. You need to pass it a transform and a color filter. Color filter
+	multiplies the color of each pixel by itself. If the filter is white, no changes
+	are made. If it is black, the image is invisible.
+</p>
+
+<pre>
+	apple.draw(th.Transform{
+		p: th.Vf2{5, 20},
+		s: th.Vf2{1, 1},
+		r: th.Vf2{45}, th.white)
+</pre>
+
+<p>
+	This draws the image at position [5, 20] rotated by 45 degrees.
+</p>
+
+<h2 class="pb-2 border-bottom" id="input">3. getting keyboards and mouse input</h2>
+
+
+<p>
+	Getting keyboard and mouse input in tophat is very simple. It is done through
+	the <a href="/docs/input.html">input.um</a> package. Getting key and button input is done using
+	the isKeyPressed and isKeyJustPressed functions. You need to provide a keycode
+	which you are asking for. It can either be an ascii char (lowercase) or on of
+	constants defined in the module. The difference between isPressed and
+	isJustPressed is that isJustPressed returns true only if a key started being
+	pressed last cycle. Example:
+</p>
+
+<pre>
+	if input.isJustPressed('a') {
+		printf("started holding A\n")
+	}
+
+	if input.isPressed('a') {
+		printf("holding A\n")
+	}
+</pre>
+
+<p>
+	Getting mouse input is also easy. Information about mouse buttons is done the
+	same way as key presses. Cursor position on the other hand has its own
+	functions. getMousePos returns a th.Vf2 containing the mouse position in
+	relation to screen. There is also getGlobalMousePos, which needs a camera as
+	an argument and returns the mouse position in relation to world.
+</p>
+
+<pre>
+	pos := input.getMousePos()
+	if pos.x &lt; cam.w/2 &amp;&amp; pos.y &lt; cam.h/2 {
+		printf("up-letf\n")
+	}
+
+	// these two are identical
+	gpos := input.getGlobalMousePos(cam)
+	gpos2 := cam.toWorld(input.getMousePos())
+</pre>
+
+<h2 class="pb-2 border-bottom" id="text">4. drawing text</h2>
+
+
+<p>
+	There are two main ways to draw text on screen. First one is using the drawText
+	function in the <a href="/docs/canvas.um">canvas.um</a> module, which draws a line text. It can't do custom
+	fonts, but can be very useful for debugging. The second one is using functions
+	found in the <a href="/docs/font.um">font.um</a> module. First you need a font.
+	That can be done by loading it from a file like so:
+</p>
+
+<pre>
+	f := font.load("inconsolata.ttf")
+</pre>
+
+<p>
+	You can then create an image with text by using the strToImage method. That is
+	however slow as it re-renders everything every time you want the text to be
+	updated. An alternative to this is using font.Cached - a wrapper around the
+	default font that caches glyph for later use. It can be created from a normal
+	font:
+</p>
+
+<pre>
+	// black cached font from font f with resolution 2.
+	cf := font.mkCached(f, th.black, 2)
+
+	// optionally, you can pre cache some characters, so it isn't done
+	// while the game runs.
+	cf.preCacheStr("01234566789.")
+</pre>
+
+<p>
+	Drawing can then be done using it's draw method.
+</p>
+
+<pre>
+	cf.draw("pi = " + repr(std.pi), th.Transform{ s: th.Vf2{1, 1} })
+</pre>
+
+
+<p>
+	Font support in tophat is very new and sadly very limited and buggy.
+</p>
+
+<h2 class="pb-2 border-bottom" id="sound">5. playing sounds</h2>
+
+
+<p>
+	Playing audio in tophat is very straight-forward. All of the needed things
+	reside in the <a href="/docs/audio.html">audio.um</a> package. First you need to load a sound:
+</p>
+
+<pre>
+	mySound := audio.load("sfx/music.mp3")
+</pre>
+
+<p>
+	Supported formats are mp3, flac and wave. You can then use a set of functions
+	to modify properties of the sound. For example you can make it loop or change
+	it's volume.
+</p>
+
+<pre>
+	mySound.looping(true)
+	mySound.vol(0.5)
+</pre>
+
+<p>
+	If you want to play it, use the play method.
+</p>
+
+<pre>
+	mySound.play()
+</pre>
+
+<p>
+	One sound can't be played two times at once. If a sound is playing, you can
+	pause it, or stop it. The difference is stopping resets the progress.
+</p>
+
+<h2 class="pb-2 border-bottom" id="entities">6. entities</h2>
+
+
+<p>
+	Entities can be defined as a combination of an image and a collider. Entities
+	are defined in the <a href="/docs/ent.html">ent.um</a> module. You can create one using the ent.mk
+	function.
+</p>
+
+<pre>
+	myEnt := ent.mk(
+		image.load("player.png"),
+		th.Tranform{
+			s: th.Vf2{ 1, 1 },
+			p: th.Vf2{ 20, 10 }})
+</pre>
+
+<p>
+	The collider is a rect (affected by the transform). It is automatically set to
+	the dimensions of the image, but can be set to something entirely else. You can
+	draw the entity by calling its draw method.
+</p>
+
+<pre>
+	myEnt.draw(cam)
+</pre>
+
+<p>
+	Entities' image can be animated using it's animate method. You provide the target
+	fps, an array of images and the current time.
+</p>
+
+<pre>
+	myEnt.animate(4, &amp;walkAnim, th.time)
+</pre>
+
+<p>
+	You need to call this every loop.
+</p>
+
+<h2 class="pb-2 border-bottom" id="distribution">7. distributing your game</h2>
+
+
+<p>
+	The easiest way to share your game it to put the tophat binary next to your
+	source code and zip it. If you don't want the source to be too exposed, you
+	can put it in tophat.dat/ and tophat will still run it. It is also recommended
+	to download the binary for the other platform, so your game runs there too.
+	You can even make a script to package the game for you.
+</p>
+
+		</div>
+		<footer class="footer mt-auto bg-light d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+			<p class="col-md-4 mb-0 text-muted">
+				Public domain, <a href="http://harmful.cat-v.org/economics/intellectual_property/">Intelectual property is oxymoron</a>
+			</p>
+    
+			<a href="/" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none container">
+				<img class="bi me-2 no-anti-aliasing" src="/img/logo.png" width="40" />
+			</a>
+    
+			<ul class="nav col-md-4 justify-content-end">
+				<li class="nav-item"><a href="/" class="nav-link px-2 text-muted">Home</a></li>
+				<li class="nav-item"><a href="/downloads" class="nav-link px-2 text-muted">Downloads</a></li>
+				<li class="nav-item"><a href="/docs" class="nav-link px-2 text-muted">Docs</a></li>
+			</ul>
+		</footer>
+	</body>
+</html>
+

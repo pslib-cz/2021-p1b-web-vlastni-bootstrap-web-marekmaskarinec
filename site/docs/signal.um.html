@@ -1,0 +1,33 @@
+<h2>signal.um</h2><hr>
+<p> A module for importless communication between modules. A signal is an array
+ of callbacks with a name.
+</p><h3>type Any*</h3><hr>
+<pre>
+type Any* = interface{}
+</pre><p>
+</p>
+
+<h3>type Callback*</h3><hr>
+<pre>
+type Callback* = fn(ctx: Any) 
+</pre><p>
+</p>
+
+<h3>type Signal*</h3><hr>
+<pre>
+type Signal* = []Callback
+</pre><p>
+</p>
+
+<h3>fn register*</h3><hr>
+<pre>fn register*(name: str, callback: Callback)</pre>
+<p>Registers a callback to a signal. There is no need to explicitely create
+signals.
+</p>
+
+<h3>fn emit*</h3><hr>
+<pre>fn emit*(name: str, ctx: Any)</pre>
+<p>Calls all callbacks associated with the passed name.
+</p>
+
+

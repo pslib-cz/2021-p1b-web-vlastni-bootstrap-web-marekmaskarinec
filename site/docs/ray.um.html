@@ -1,0 +1,30 @@
+<h2>ray.um</h2><hr>
+<p> This module will undergo changes.
+</p><h3>type Ray*</h3><hr>
+<pre>
+type Ray* = struct {
+	pos: th.Vf2
+	l: th.fu // length
+	r: th.fu // rotation
+}
+
+</pre><p>
+Ray type.
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(pos: th.Vf2, l, r: th.fu): Ray</pre>
+<p>Makes a ray.
+</p>
+
+<h3>fn getcoll*</h3><hr>
+<pre>fn (r: ^Ray) getcoll*(s: []^ent.Ent, ic: ^th.Vf2): int32</pre>
+<p>Same as ent.getcoll. Same changes will apply.
+</p>
+
+<h3>fn gettmapcoll*</h3><hr>
+<pre>fn (r: ^Ray) gettmapcoll*(t: tilemap.Tilemap, ic: ^th.Vf2): bool</pre>
+<p>Gets ray's collision to a tilemap.
+</p>
+
+

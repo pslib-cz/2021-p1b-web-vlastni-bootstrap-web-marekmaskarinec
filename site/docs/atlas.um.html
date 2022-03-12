@@ -1,0 +1,20 @@
+<h2>atlas.um</h2><hr>
+<p></p><h3>type Atlas*</h3><hr>
+<pre>
+type Atlas* = struct {
+	i: image.Image // source image
+	cs: th.Vf2 // size of a cell in pixels
+	dm: th.Vf2 // amount of cells in image
+}
+
+</pre><p>
+Atlas is an image containing tiles in a square grid.
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(i: image.Image, dm: th.Vf2): Atlas</pre>
+<p>i: source image
+dm: amount of cells
+</p>
+
+

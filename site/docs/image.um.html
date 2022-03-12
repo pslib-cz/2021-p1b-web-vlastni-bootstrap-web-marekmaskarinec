@@ -1,0 +1,61 @@
+<h2>image.um</h2><hr>
+<p></p><h3>type Image*</h3><hr>
+<pre>
+type Image* = struct {
+	handle: int
+}
+
+</pre><p>
+Represents a drawable image. It is an opaque structure.
+Images support a color filter. It is applied by multiplying the color
+of each pixel with the filter.
+</p>
+
+<h3>fn load*</h3><hr>
+<pre>fn load*(path: str): Image</pre>
+<p>Loads an image at path.
+</p>
+
+<h3>fn flipv*</h3><hr>
+<pre>fn (i: ^Image) flipv*(flip: bool)</pre>
+<p>Flips image on it's vertical axis.
+</p>
+
+<h3>fn fliph*</h3><hr>
+<pre>fn (i: ^Image) fliph*(flip: bool)</pre>
+<p>Flips image on it's horizontal axis.
+</p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (i: ^Image) draw*(t: th.Transform, color: uint32 = th.white)</pre>
+<p>Draws the image in screen coordinates. It transforms it with t and
+applies color as a color filter.
+</p>
+
+<h3>fn validate*</h3><hr>
+<pre>fn (i: ^Image) validate*(): bool</pre>
+<p>Returns true, if i's handle points to an image.
+</p>
+
+<h3>fn getDims*</h3><hr>
+<pre>fn (i: ^Image) getDims*(): th.Vf2</pre>
+<p>Returns width and heigth.
+</p>
+
+<h3>fn crop*</h3><hr>
+<pre>fn (i: ^Image) crop*(tl, br: th.Vf2)</pre>
+<p>Crops an image. Coordinates are between 0, 0 (top left) and
+1, 1 (bottom right)
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(data: []uint32, dm: th.Vf2): Image</pre>
+<p>Creates an image from raw data.
+</p>
+
+<h3>fn copy*</h3><hr>
+<pre>fn (i: ^Image) copy*(): Image</pre>
+<p>Copies image into a new one.
+</p>
+
+

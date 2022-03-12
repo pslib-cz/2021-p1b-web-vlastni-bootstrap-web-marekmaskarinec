@@ -1,0 +1,51 @@
+<h2>tilemap.um</h2><hr>
+<p> Tilemaps allow for easy level construction and fast collisions. You can even
+ use them for some games instead of entities (tetris comes to mind)
+</p><h3>type Tilemap*</h3><hr>
+<pre>
+type Tilemap* = struct {
+	atlas: atlas.Atlas
+	pos: th.Vf2
+	w: th.uu // width of tilemap
+	cells: []th.uu // all cells (this will draw the tile in tiles with number in cells - 1)
+	collMask: []bool // if true, the tile collides
+	scale: th.fu
+}
+
+</pre><p>
+Tilemap struct
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(cells: []th.uu, w: th.uu, at: atlas.Atlas, scale: th.fu): Tilemap</pre>
+<p></p>
+
+<h3>fn edit*</h3><hr>
+<pre>fn (t: ^Tilemap) edit*(x, y, tile: int)</pre>
+<p>Sets tile at [x, y] to tile.
+</p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (t: ^Tilemap) draw*(cam: rect.Rect)</pre>
+<p>Draws the tilemap.
+</p>
+
+<h3>fn getColl*</h3><hr>
+<pre>fn (t: ^Tilemap) getColl*(e: ent.Ent, vert: ^th.uu, pos: ^th.Vf2): bool</pre>
+<p>Checks, if t collides with e.
+pos is the tile index where the collision happened
+vert is which index collided
+You need to pass a valid pointer (TODO)
+</p>
+
+<h3>fn autotile*</h3><hr>
+<pre>fn (t: ^Tilemap) autotile*(src, tileCfg: []th.uu, tile: th.uu)</pre>
+<p>Autotile turns all `tile` tiles in `src` into tiles in `tileCfg`, so they
+follow up correctly. `tileCfg` is an array of 16 tiles. They are placed in
+a way where OR of all the places where the tile continues (top, right bot,
+right). The constants for them are defined in this file. Example:
+tileCfg[top | bot] = 21
+top | bot would look something like this: |
+</p>
+
+

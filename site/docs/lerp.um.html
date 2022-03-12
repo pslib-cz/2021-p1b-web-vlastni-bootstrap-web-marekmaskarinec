@@ -1,0 +1,54 @@
+<h2>lerp.um</h2><hr>
+<p> Simple linear interpolation module.
+</p><h3>type Any*</h3><hr>
+<pre>
+type Any* = interface{}
+</pre><p>
+</p>
+
+<h3>type Item*</h3><hr>
+<pre>
+type Item* = struct {
+	start, end: th.fu
+	length: th.uu
+	progress: th.fu
+	swap: bool
+	ctx: Any
+	callback: fn(ctx: Any)
+}
+
+</pre><p>
+Lerper queue item. It interpolates between start and end for the duration
+of length in ms. Additionally you can enable swap, which instead of
+dequeueing swaps start and end and resets the progress.
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(start, end: th.fu, length: th.uu, swap: bool): Item</pre>
+<p>Item's constructor
+</p>
+
+<h3>type Lerper*</h3><hr>
+<pre>
+type Lerper* = []Item
+</pre><p>
+Lerper is a queue of items. It will lerp the first one and if it ends
+and doesn't have swap enabled, it will dequeue it.
+</p>
+
+<h3>fn dequeue*</h3><hr>
+<pre>fn (l: ^Lerper) dequeue*()</pre>
+<p>Removes the first lerper item.
+</p>
+
+<h3>fn enqueue*</h3><hr>
+<pre>fn (l: ^Lerper) enqueue*(i: Item)</pre>
+<p>Adds an item to l's queue
+</p>
+
+<h3>fn byDelta*</h3><hr>
+<pre>fn (l: ^Lerper) byDelta*(delta: th.uu): th.fu</pre>
+<p>Interpolates the front by delta. And returns it's value.
+</p>
+
+

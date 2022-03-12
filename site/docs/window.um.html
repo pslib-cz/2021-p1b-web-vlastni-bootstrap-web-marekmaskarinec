@@ -1,0 +1,16 @@
+<h2>window.um</h2><hr>
+<p> Module for interacting with tophat. w and h variables store the size of the
+ window.
+</p><h3>fn setup*</h3><hr>
+<pre>fn setup*(title: str, w, h: int32)</pre>
+<p>Set's up the engine and opens a window.
+</p>
+
+<h3>fn cycle*</h3><hr>
+<pre>fn cycle*(cam: rect.Rect): bool</pre>
+<p>Cycle needs to be called every cycle. Pass the currently used camera, which
+i used to calculate tophat's scaling. It returns true, if the window is
+still running.
+</p>
+
+

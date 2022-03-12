@@ -1,0 +1,39 @@
+<h2>anim.um</h2><hr>
+<p> Module for frame based image animation.
+</p><h3>type Anim*</h3><hr>
+<pre>
+type Anim* = struct {
+	anim: []image.Image
+	rot: th.fu
+	scale: th.fu
+	fps: th.uu
+	looping: bool
+
+	pos: th.Vf2
+
+	zeroTime: int
+
+	frame: int
+}
+
+</pre><p>
+Anim is able to animate an array of images. As opposed to ent.Ent.animate,
+it starts from the first frame.
+</p>
+
+<h3>fn mk*</h3><hr>
+<pre>fn mk*(pos: th.Vf2, anm: []image.Image, fps: th.uu): Anim</pre>
+<p>Anim's constructor.
+</p>
+
+<h3>fn start*</h3><hr>
+<pre>fn (a: ^Anim) start*(t: int)</pre>
+<p>Starts animation with start_time of t.
+</p>
+
+<h3>fn handle*</h3><hr>
+<pre>fn (a: ^Anim) handle*(t: uint, cam: rect.Rect): bool</pre>
+<p>This draws the animation. Returns true, if the animation ended.
+</p>
+
+

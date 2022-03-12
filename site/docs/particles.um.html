@@ -1,0 +1,54 @@
+<h2>particles.um</h2><hr>
+<p> Particles allow for <i>performant<i> and random particle systems.
+ TODO: a better constructor
+</p><h3>type Particle*</h3><hr>
+<pre>
+type Particle* = struct {
+	start_time: uint
+	seed: int32
+}
+
+</pre><p>
+Particle struct. You can tweak the start_time for godot-like explossivness.
+</p>
+
+<h3>type Emitter*</h3><hr>
+<pre>
+type Emitter* = struct {
+	pos: th.Vf2 // position
+	dm: th.Vf2 // size of the emittion area
+	gravity: th.Vf2 // gravity
+	repeat: bool // if false, particle won't be renewed
+	active: bool // false, if there aren't any active particles anymore
+	
+	angle: th.Vf2 // angle in which particles are emitted
+
+	lifetime: th.uu // lifetime of particles
+	lifetimeRandomness: th.fu // randomness in %/100
+
+	velocity: th.fu // velocity
+	velocityRandomness: th.fu // randomness in %/100
+
+	size: th.fu // size
+	sizeRandomness: th.fu // randomness in %/100
+	maxSize: th.fu // size at the end of particles lifetime
+
+	rotation: th.fu
+	rotationRandomness: th.fu
+	maxRotation: th.fu
+
+	colors: []uint32 // array of colors, which are interpolated between
+	
+	particles: []Particle // list of particles
+}
+
+</pre><p>
+Emitter. This is where everything is configured.
+</p>
+
+<h3>fn draw*</h3><hr>
+<pre>fn (e: ^Emitter) draw*(cam: rect.Rect, t: int32)</pre>
+<p>Draws and updates the particles.
+</p>
+
+

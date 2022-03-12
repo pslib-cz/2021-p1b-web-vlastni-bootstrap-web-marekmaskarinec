@@ -3,6 +3,8 @@
 
 cd site
 
+umka ../libs/doc.um -i -o docs/ -r -w ../../tophat/umka/*.um
+
 for f in $(find -name \*.html | cut -d / -f 2-); do
 	echo BU $f
 	umka ../conv.um ../template.html $f > ../$(echo $f | cut -d . -f 1).html

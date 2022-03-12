@@ -1,0 +1,109 @@
+<h2>th.um</h2><hr>
+<p> Module with useful variables and types.
+ Variables: time, delta, platform
+ Constants: black, white, red, green, blue, yellow, magenta, cyan.
+</p><h3>type fu*</h3><hr>
+<pre>
+type fu* = real32
+</pre><p>
+standard type for real values
+</p>
+
+<h3>type iu*</h3><hr>
+<pre>
+type iu* = int16
+</pre><p>
+standard type for integer values
+</p>
+
+<h3>type uu*</h3><hr>
+<pre>
+type uu* = uint16
+</pre><p>
+standard type for unsigned values
+</p>
+
+<h3>type Vf2*</h3><hr>
+<pre>
+type Vf2* = struct {
+	x, y: fu
+}
+
+</pre><p>
+vector 2
+</p>
+
+<h3>fn rotated*</h3><hr>
+<pre>fn (p: ^th.Vf2) rotated*(origin: th.Vf2, rot: th.fu): th.Vf2</pre>
+<p>rotates `p` around `origin` with `rot` in degrees
+</p>
+
+<h3>fn distanceTo*</h3><hr>
+<pre>fn (p1: ^th.Vf2) distanceTo*(p2: th.Vf2): th.fu</pre>
+<p>distance between p1 and p2
+</p>
+
+<h3>fn angleTo*</h3><hr>
+<pre>fn (p1: ^th.Vf2) angleTo*(p2: th.Vf2): real</pre>
+<p>Angle between p1 and p2
+</p>
+
+<h3>fn abs*</h3><hr>
+<pre>fn (p: ^th.Vf2) abs*(): th.Vf2</pre>
+<p>Absolute value of a vector.
+</p>
+
+<h3>fn rnd*</h3><hr>
+<pre>fn (p: ^th.Vf2) rnd*(): th.Vf2</pre>
+<p>Rounds a vector.
+</p>
+
+<h3>fn flr*</h3><hr>
+<pre>fn (p: ^th.Vf2) flr*(): th.Vf2</pre>
+<p>Truncates a vector.
+</p>
+
+<h3>fn sub*</h3><hr>
+<pre>fn (p: ^th.Vf2) sub*(p2: th.Vf2): th.Vf2</pre>
+<p>Subtracts a vector from another one.
+</p>
+
+<h3>fn add*</h3><hr>
+<pre>fn (p: ^th.Vf2) add*(p2: th.Vf2): th.Vf2</pre>
+<p>Adds a vector to another one.
+</p>
+
+<h3>fn div*</h3><hr>
+<pre>fn (p: ^th.Vf2) div*(p2: th.Vf2): th.Vf2</pre>
+<p>Divides a vector by another one.
+</p>
+
+<h3>fn mul*</h3><hr>
+<pre>fn (p: ^th.Vf2) mul*(p2: th.Vf2): th.Vf2</pre>
+<p>Multiplies a vector by another one.
+</p>
+
+<h3>fn mag*</h3><hr>
+<pre>fn (p: ^th.Vf2) mag*(): th.fu</pre>
+<p>Returns the magnitude of a vector p.
+</p>
+
+<h3>fn norm*</h3><hr>
+<pre>fn (p: ^th.Vf2) norm*(): th.Vf2</pre>
+<p>Normalizes a vector in such a way atleas one values is 1 (unless mag is 0).
+</p>
+
+<h3>type Transform*</h3><hr>
+<pre>
+type Transform* = struct {
+	p: Vf2 // position
+	s: Vf2 // scale
+	o: Vf2 // origin
+	r: fu  // rotation
+}
+
+</pre><p>
+Struct defining transformation. Used for example by entities.
+</p>
+
+
